@@ -1,0 +1,22 @@
+﻿<!-- to show success msg after a crud operation -->
+@if (TempData["success"] != null)
+{
+    <!-- when we are adding toastr in notification we have to add jquery-->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <script type="text/javascript">
+        toastr.success('@TempData["success"]');
+    </script>
+
+}
+
+@if (TempData["error"] != null)
+{
+    <!-- when we are adding toastr in notification we have to add jquery-->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.error('@TempData["error"]');
+    </script>
+}

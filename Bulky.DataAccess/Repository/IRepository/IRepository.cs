@@ -17,8 +17,8 @@ namespace Bulky.DataAccess.Repository.IRepository
         // what will be all operation?
         // we need to retrieve all categorys to diplay them
 
-        IEnumerable<T> GetAll();    // for all 
-        T Get(Expression<Func<T,bool>> filter);  // fetching single record
+        IEnumerable<T> GetAll(string? includeProperties = null);    // for all 
+        T Get(Expression<Func<T,bool>> filter, string? includeProperties = null);  // fetching single record
         void Add(T entity);     // for adding record
         void Remove(T entity);  // for deleting record
         void RemoveRange(IEnumerable<T> entities);  //deleteing in some range

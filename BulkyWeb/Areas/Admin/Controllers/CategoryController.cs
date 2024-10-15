@@ -1,19 +1,25 @@
 ﻿using Bulky.DataAccess.Data;
+using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BulkyWeb.Controllers
+namespace BulkyWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    //THIS CONTROLLER IS IN ADMIN AREA
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        //private readonly ApplicationDbContext _db;
+        //now we dont need ApplicationDbContext because we have Repositories
+
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            List<Category> objCategoryList = _db.Categories.ToList();
+            List<Category> objCategoryList = _unitOfWork.Category.GetAll().ToList();
 
             return View(objCategoryList);
         }
@@ -31,8 +37,8 @@ namespace BulkyWeb.Controllers
             {
                 ModelState.AddModelError("Name", "Dislpay order and Name can't be the same");
             }
-            
-            if (obj.Name!=null && obj.Name.ToLower() == "test")
+
+            if (obj.Name != null && obj.Name.ToLower() == "test")
             {
                 ModelState.AddModelError("", "Test is invalid value");
             }
@@ -40,24 +46,26 @@ namespace BulkyWeb.Controllers
             //if obj is valid it will go to category.cs, it will check whatever is required and it should be populated accordingly
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(obj); //write category object to the category table
-                _db.SaveChanges();
+                _unitOfWork.Category.Add(obj); //write category object to the category table
+                _unitOfWork.Save();
                 //to show successful dialogue on screen
                 TempData["success"] = "Category created successfully!";
                 return RedirectToAction("Index");
             }
 
-            return View();            
+            return View();
         }
 
         //get action
         public IActionResult Edit(int? id)
         {
-            if (id == null || id==0) { 
+            if (id == null || id == 0)
+            {
                 return NotFound();
             }
 
-            Category? categoryFromDb = _db.Categories.Find(id);
+            Category? categoryFromDb = _unitOfWork.Category.Get(u => u.Id == id);
+            //Category? categoryFromDb = _db.Categories.Find(id);
             //Category? categoryFromDb = _db.Categories.FirstOrDefault(c => c.Id == id);
 
             if (categoryFromDb == null)
@@ -73,8 +81,10 @@ namespace BulkyWeb.Controllers
             //if obj is valid it will go to category.cs, it will check whatever is required and it should be populated accordingly
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(obj); //write category object to the category table
-                _db.SaveChanges();
+                _unitOfWork.Category.Update(obj);
+                _unitOfWork.Save();
+                //_db.Categories.Update(obj); //write category object to the category table
+                //_db.SaveChanges();
                 TempData["success"] = "Category updated successfully!";
                 return RedirectToAction("Index");
             }
@@ -90,7 +100,9 @@ namespace BulkyWeb.Controllers
                 return NotFound();
             }
 
-            Category? categoryFromDb = _db.Categories.Find(id);
+
+            Category? categoryFromDb = _unitOfWork.Category.Get(u => u.Id == id);
+            //Category? categoryFromDb = _db.Categories.Find(id);
             //Category? categoryFromDb = _db.Categories.FirstOrDefault(c => c.Id == id);
 
             if (categoryFromDb == null)
@@ -103,16 +115,19 @@ namespace BulkyWeb.Controllers
         public IActionResult DeletePOST(int? id)
         {
 
-            Category? obj = _db.Categories.Find(id);
+            Category? obj = _unitOfWork.Category.Get(u => u.Id == id);
+            //Category? obj = _db.Categories.Find(id);
             if (obj == null)
             {
                 return NotFound();
             }
-            _db.Categories.Remove(obj);
+            _unitOfWork.Category.Remove(obj);
+            _unitOfWork.Save();
+            //_db.Categories.Remove(obj);
 
             //_db.Categories.Update(obj); //write category object to the category table
-            _db.SaveChanges();
-            TempData["success"] = "Category deleted successfully!";          
+            //_db.SaveChanges();
+            TempData["success"] = "Category deleted successfully!";
             return RedirectToAction("Index");
         }
     }

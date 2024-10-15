@@ -29,7 +29,8 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
         //get action
-        public IActionResult Create()
+        //upsert is combination of create and insert
+        public IActionResult Upsert(int? id)
         {
 
             // CONVERTING CATEGORY INTO IENUMERABLE,, THIS IS USING PROJECTION
@@ -56,10 +57,23 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 Product = new Product()
             }; 
 
-            return View(productVM);
+            if(id==null || id==0)
+            {
+                //that means it is create functionality
+                return View(productVM);
+
+            }
+            else
+            {
+                //that means it is update functionality
+                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
+                return View(productVM);
+            }
+
+
         }
         [HttpPost]
-        public IActionResult Create(ProductVM productVM)
+        public IActionResult Upsert(ProductVM productVM, IFormFile? file)
         {
             //if obj is valid it will go to Product.cs, it will check whatever is required and it should be populated accordingly
             if (ModelState.IsValid)
@@ -83,41 +97,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             
         }
 
-        //get action
-        public IActionResult Edit(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
 
-            Product? productFromDb = _unitOfWork.Product.Get(u => u.Id == id);
-            //Product? ProductFromDb = _db.Categories.Find(id);
-            //Product? ProductFromDb = _db.Categories.FirstOrDefault(c => c.Id == id);
-
-            if (productFromDb == null)
-            {
-                return NotFound();
-            }
-            return View(productFromDb);
-        }
-        [HttpPost]
-        public IActionResult Edit(Product obj)
-        {
-
-            //if obj is valid it will go to Product.cs, it will check whatever is required and it should be populated accordingly
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Product.Update(obj);
-                _unitOfWork.Save();
-                //_db.Categories.Update(obj); //write Product object to the Product table
-                //_db.SaveChanges();
-                TempData["success"] = "Product updated successfully!";
-                return RedirectToAction("Index");
-            }
-
-            return View();
-        }
 
         //get action
         public IActionResult Delete(int? id)

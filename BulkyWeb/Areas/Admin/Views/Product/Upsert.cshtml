@@ -4,14 +4,16 @@
     <div class="card-holder bg-secondary bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white p-2">Create Product</h2>
+                <h2 class="text-white p-2">@(Model.Product.Id!=0?"Update":"Create")Product</h2>
             </div>
         </div>
     </div>
     <div class="card-body p-4">
         <form method="post" class="row">
-            <div class="border p-3">
+            <div class="border p-3" enctype="multipart/form-data">
+                <!-- enctype="multipart/form-data" without it file upload will not work-->
                 <!-- this is validation summary for all-->
+                <input asp-for="Product.Id" hidden />
                 <div asp-validation-summary="ModelOnly"></div>
                 <div class="form-floating py-2 col-12">
                     <input asp-for="Product.Title" class="form-control border-0 shadow" />
@@ -71,13 +73,20 @@
                     <span asp-validation-for="Product.CategoryID" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <input asp-for="Product.ImageURL" class="form-control border-0 shadow" />
+                    <input type="file" class="form-control border-0 shadow" />
                     <label asp-for="Product.ImageURL" class="ms-2"></label>
-                    <span asp-validation-for="Product.ImageURL" class="text-danger"></span>
                 </div>
                 <div class="row pt-2">
                     <div class="col-6 col-md-3">
-                        <button type="submit" class="btn btn-primary form-control">Create</button>
+                        @if (Model.Product.Id != 0)
+                        {
+                            <button type="submit" class="btn btn-primary form-control">Update</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary form-control">Create</button>
+                        }
+                        
                     </div>
                     <div class="col-6 col-md-3">
                         <a asp-controller="Product" asp-action="Index" class="btn btn-outline-primary border form-control">Back to list</a>

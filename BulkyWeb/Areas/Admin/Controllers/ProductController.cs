@@ -17,9 +17,11 @@ namespace BulkyWeb.Areas.Admin.Controllers
         //now we dont need ApplicationDbContext because we have Repositories
 
         private readonly IUnitOfWork _unitOfWork;
-        public ProductController(IUnitOfWork unitOfWork)
+        private readonly IWebHostEnvironment _webHostEnvironment; //FOR uploading images
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -78,6 +80,20 @@ namespace BulkyWeb.Areas.Admin.Controllers
             //if obj is valid it will go to Product.cs, it will check whatever is required and it should be populated accordingly
             if (ModelState.IsValid)
             {
+                string wwwRootPath = _webHostEnvironment.WebRootPath; //this will give us path of root folder which is wwwroot
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); //that will give a random name to file
+                    string prodcutPath = Path.Combine(wwwRootPath, @"images\product"); //that will give path inside product folder of images
+
+                    //saving image
+                    using (var fileStream = new FileStream(Path.Combine(prodcutPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+
+                    productVM.Product.ImageURL = @"\images\product\" + fileName;
+                }
                 _unitOfWork.Product.Add(productVM.Product); //write Product object to the Product table
                 _unitOfWork.Save();
                 //to show successful dialogue on screen

@@ -9,8 +9,8 @@
         </div>
     </div>
     <div class="card-body p-4">
-        <form method="post" class="row">
-            <div class="border p-3" enctype="multipart/form-data">
+        <form method="post" class="row" enctype="multipart/form-data">
+            <div class="border p-3">
                 <!-- enctype="multipart/form-data" without it file upload will not work-->
                 <!-- this is validation summary for all-->
                 <input asp-for="Product.Id" hidden />
@@ -72,7 +72,7 @@
                     <span asp-validation-for="Product.CategoryID" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <input type="file" class="form-control border-0 shadow" />
+                    <input type="file" name="file" class="form-control border-0 shadow" />
                     <label asp-for="Product.ImageURL" class="ms-2"></label>
                 </div>
                 <div class="row pt-2">

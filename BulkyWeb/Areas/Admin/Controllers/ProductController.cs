@@ -86,6 +86,17 @@ namespace BulkyWeb.Areas.Admin.Controllers
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); //that will give a random name to file
                     string prodcutPath = Path.Combine(wwwRootPath, @"images\product"); //that will give path inside product folder of images
 
+                    // for updating image 
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageURL)) { 
+                        //delete the old image
+                        //trimmig \ from path
+                        var oldImagePath = Path.Combine(wwwRootPath,productVM.Product.ImageURL.TrimStart('\\'));
+
+                        if (System.IO.File.Exists(oldImagePath)) { 
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
                     //saving image
                     using (var fileStream = new FileStream(Path.Combine(prodcutPath, fileName), FileMode.Create))
                     {
@@ -94,7 +105,16 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
                     productVM.Product.ImageURL = @"\images\product\" + fileName;
                 }
-                _unitOfWork.Product.Add(productVM.Product); //write Product object to the Product table
+
+                if (productVM.Product.Id == 0)
+                {
+                    _unitOfWork.Product.Add(productVM.Product); //write Product object to the Product table
+                }
+                else
+                {
+                    _unitOfWork.Product.Update(productVM.Product);
+                }
+                
                 _unitOfWork.Save();
                 //to show successful dialogue on screen
                 TempData["success"] = "Product created successfully!";

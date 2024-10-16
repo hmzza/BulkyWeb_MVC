@@ -4,6 +4,7 @@ using Bulky.Models;
 using Bulky.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Collections.Generic;
 
 namespace BulkyWeb.Areas.Admin.Controllers
@@ -34,21 +35,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
         //upsert is combination of create and insert
         public IActionResult Upsert(int? id)
         {
-
-            // CONVERTING CATEGORY INTO IENUMERABLE,, THIS IS USING PROJECTION
-            //IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
-            //{
-            //    Text = u.Name,
-            //    Value = u.Id.ToString()
-            //});
-
-
-            // USING VIEWBAG TO SEND CATEGORY DATA TO PRODUCTS
-            //ViewBag.CategoryList = CategoryList; 
-
-            // USING VIEWDATA TO SEND CATEGORY DATA TO PRODUCTS
-            //ViewData["CategoryList"] = CategoryList;
-
             ProductVM productVM = new()
             {
                 CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
@@ -136,43 +122,43 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 
         //get action
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+        //public IActionResult Delete(int? id)
+        //{
+        //    if (id == null || id == 0)
+        //    {
+        //        return NotFound();
+        //    }
 
 
-            Product? ProductFromDb = _unitOfWork.Product.Get(u => u.Id == id);
-            //Product? ProductFromDb = _db.Categories.Find(id);
-            //Product? ProductFromDb = _db.Categories.FirstOrDefault(c => c.Id == id);
+        //    Product? ProductFromDb = _unitOfWork.Product.Get(u => u.Id == id);
+        //    //Product? ProductFromDb = _db.Categories.Find(id);
+        //    //Product? ProductFromDb = _db.Categories.FirstOrDefault(c => c.Id == id);
 
-            if (ProductFromDb == null)
-            {
-                return NotFound();
-            }
-            return View(ProductFromDb);
-        }
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(int? id)
-        {
+        //    if (ProductFromDb == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(ProductFromDb);
+        //}
+        //[HttpPost, ActionName("Delete")]
+        //public IActionResult DeletePOST(int? id)
+        //{
 
-            Product? obj = _unitOfWork.Product.Get(u => u.Id == id);
-            //Product? obj = _db.Categories.Find(id);
-            if (obj == null)
-            {
-                return NotFound();
-            }
-            _unitOfWork.Product.Remove(obj);
-            _unitOfWork.Save();
-            //_db.Categories.Remove(obj);
+        //    Product? obj = _unitOfWork.Product.Get(u => u.Id == id);
+        //    //Product? obj = _db.Categories.Find(id);
+        //    if (obj == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    _unitOfWork.Product.Remove(obj);
+        //    _unitOfWork.Save();
+        //    //_db.Categories.Remove(obj);
 
-            //_db.Categories.Update(obj); //write Product object to the Product table
-            //_db.SaveChanges();
-            TempData["success"] = "Product deleted successfully!";
-            return RedirectToAction("Index");
-        }
+        //    //_db.Categories.Update(obj); //write Product object to the Product table
+        //    //_db.SaveChanges();
+        //    TempData["success"] = "Product deleted successfully!";
+        //    return RedirectToAction("Index");
+        //}
 
         #region API CALLS
 
@@ -181,6 +167,28 @@ namespace BulkyWeb.Areas.Admin.Controllers
         {
             List<Product> objProductsList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
             return Json(new {data = objProductsList });
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            var prodToBeDeleted = _unitOfWork.Product.Get(u=>u.Id == id);   
+            if (prodToBeDeleted == null)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
+
+            var oldImagePath =
+                Path.Combine(_webHostEnvironment.WebRootPath, prodToBeDeleted.ImageURL.TrimStart('\\'));
+
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.Product.Remove(prodToBeDeleted);
+            _unitOfWork.Save();
+            return Json(new { success = true, message = "Deleted Successful!" });
         }
 
         #endregion

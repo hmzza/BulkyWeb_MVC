@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Product>
 
-<div class="row pb-3">
-    @foreach(var product in Model)
+<div class="row pb-3 mb-3">
+    @foreach (var product in Model)
     {
         <div class="col-lg-3 col-sm-6">
             <div class="row p-2">
@@ -15,7 +15,7 @@
                             </div>
                             <div class="pl-1">
                                 <p class="text-dark text-opacity-75 text-center mb-0">List Price: <span class="text-decoration-line-through">@product.ListPrice.ToString("c")</span></p>
-                            </div>  
+                            </div>
                             <div class="pl-1">
                                 <p class="text-dark text-opacity-75 text-center">As low as: <span>@product.Price100.ToString("c")</span></p>
                             </div>

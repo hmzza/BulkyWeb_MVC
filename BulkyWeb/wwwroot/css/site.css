@@ -86,7 +86,14 @@ bg-success {
 
 .card {
     border-color: #425F4B !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
 
 
 
@@ -537,3 +544,5 @@ bg-success {
         background-color: #578553;
         border-color: #578553;
     }
+
+

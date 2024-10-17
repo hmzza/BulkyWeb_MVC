@@ -20,22 +20,26 @@ namespace Bulky.DataAccess.Repository
 
         public void Update(Product obj)
         {
-            var objFromDb = _db.Products.FirstOrDefault(u=>u.Id == obj.Id);
-            if (objFromDb != null) 
-            { 
-                objFromDb.Title = objFromDb.Title;
-                objFromDb.ISBN = objFromDb.ISBN;
-                objFromDb.Price = objFromDb.Price;
-                objFromDb.ListPrice = objFromDb.ListPrice; 
-                objFromDb.Price50 = objFromDb.Price50;
-                objFromDb.Price100 = objFromDb.Price100;
-                objFromDb.Description = objFromDb.Description;
-                objFromDb.CategoryID = objFromDb.CategoryID;
-                objFromDb.Author = objFromDb.Author;
-                if (obj.ImageURL != null) {
+            var objFromDb = _db.Products.FirstOrDefault(u => u.Id == obj.Id);
+            if (objFromDb != null)
+            {
+                objFromDb.Title = obj.Title;
+                objFromDb.ISBN = obj.ISBN;
+                objFromDb.Price = obj.Price;
+                objFromDb.ListPrice = obj.ListPrice;
+                objFromDb.Price50 = obj.Price50;
+                objFromDb.Price100 = obj.Price100;
+                objFromDb.Description = obj.Description;
+                objFromDb.CategoryID = obj.CategoryID;
+                objFromDb.Author = obj.Author;
+
+                // Only update the ImageURL if a new image is provided
+                if (obj.ImageURL != null)
+                {
                     objFromDb.ImageURL = obj.ImageURL;
                 }
             }
         }
+
     }
 }

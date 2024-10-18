@@ -1,11 +1,16 @@
 ﻿using Bulky.DataAccess.Data;
 using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
+using Bulky.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+ 
+    //doing this so that no one can go by pasting url in browser
+    [Authorize(Roles = StaticDetails.Role_Admin)]
     //THIS CONTROLLER IS IN ADMIN AREA
     public class CategoryController : Controller
     {

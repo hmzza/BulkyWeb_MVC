@@ -12,7 +12,7 @@ namespace Bulky.Models
     {
         [Required]
         public string name { get; set; }
-        public string? StreetName{ get; set; }
+        public string? StreetAddress{ get; set; }
         public string? City{ get; set; }
         public string? State{ get; set; }
         public string? PostalCode{ get; set; }

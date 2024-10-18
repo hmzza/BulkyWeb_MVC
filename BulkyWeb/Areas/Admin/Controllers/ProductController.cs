@@ -16,7 +16,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
     //THIS CONTROLLER IS IN ADMIN AREA
 
     //doing this so that no one can go by pasting url in browser
-    [Authorize(Roles = StaticDetails.Role_Admin)]
+    //[Authorize(Roles = StaticDetails.Role_Admin)]
     public class ProductController : Controller
     {
         //private readonly ApplicationDbContext _db;

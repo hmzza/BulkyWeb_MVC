@@ -4,6 +4,7 @@ using Bulky.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bulky.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241018065023_AddedCompanyDBTable")]
+    partial class AddedCompanyDBTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,38 +96,6 @@ namespace Bulky.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "Tech City",
-                            Name = "Tech Solution",
-                            PhoneNumber = "031232938289",
-                            PostalCode = "12212",
-                            State = "IL",
-                            StreetAddress = "123 Tech st 12"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            City = "Lahore City",
-                            Name = "HHH Solution",
-                            PhoneNumber = "0315353938285",
-                            PostalCode = "32212",
-                            State = "PB",
-                            StreetAddress = "13 Raiv st 11"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            City = "Islamabad City",
-                            Name = "SOft Solution",
-                            PhoneNumber = "035552938289",
-                            PostalCode = "99212",
-                            State = "ISB",
-                            StreetAddress = "33 Lane st 2"
-                        });
                 });
 
             modelBuilder.Entity("Bulky.Models.Product", b =>

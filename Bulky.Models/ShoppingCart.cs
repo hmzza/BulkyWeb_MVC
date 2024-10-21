@@ -24,5 +24,10 @@ namespace Bulky.Models
         [ForeignKey("ApplicationUserId")]
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
+
+
+        //by saying not mapped it willl not add this in DB
+        [NotMapped]
+        public double Price { get; set; }
     }
 }

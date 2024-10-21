@@ -19,6 +19,7 @@ namespace Bulky.DataAccess.Data
         // for identity application users
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Company> Companies{ get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

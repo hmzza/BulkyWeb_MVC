@@ -30,7 +30,7 @@ namespace Bulky.DataAccess.Repository
            var orderFromDb = _db.OrderHeaders.FirstOrDefault(u=>u.Id == id);
             if (orderFromDb != null) { 
                 orderFromDb.OrderStatus = orderStatus;
-                if (string.IsNullOrEmpty(paymentStatus)) { 
+                if (!string.IsNullOrEmpty(paymentStatus)) { 
                     orderFromDb.PaymentStatus = paymentStatus;
                 }
             }

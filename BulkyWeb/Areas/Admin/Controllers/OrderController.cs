@@ -21,7 +21,8 @@ namespace BulkyWeb.Areas.Admin.Controllers
         {
             return View();
         }
-        
+
+        //Order details Get Action
         public IActionResult Details(int orderId)
         {
             OrderVM orderVM = new()

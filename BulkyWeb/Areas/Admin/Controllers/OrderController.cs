@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
+    [Area("admin")]
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

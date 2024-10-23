@@ -181,6 +181,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
                     _unitOfWork.Save();
 
                 }
+                HttpContext.Session.Clear();
             }
 
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();

@@ -28,6 +28,11 @@ builder.Services.ConfigureApplicationCookie(options => {
     options.LogoutPath = $"/Identity/Account/Logout";
     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 });
+builder.Services.AddAuthentication().AddFacebook(option =>
+{
+    option.AppId = "870863455177472";
+    option.AppSecret = "88ec1417def639a151d7bf4142f0508e";
+});
 //registering category service to dependecy injection
 //builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 

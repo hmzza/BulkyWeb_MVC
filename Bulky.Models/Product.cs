@@ -57,8 +57,8 @@ namespace Bulky.Models
 
 
 
-        // IMAGES
-        [ValidateNever]
-        public string ImageURL { get; set; }
+        //// IMAGES
+        //[ValidateNever]
+        //public string ImageURL { get; set; }
     }
 }

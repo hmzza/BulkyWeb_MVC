@@ -78,23 +78,23 @@ namespace BulkyWeb.Areas.Admin.Controllers
                     string prodcutPath = Path.Combine(wwwRootPath, @"images\product"); //that will give path inside product folder of images
 
                     // for updating image 
-                    if (!string.IsNullOrEmpty(productVM.Product.ImageURL)) { 
-                        //delete the old image
-                        //trimmig \ from path
-                        var oldImagePath = Path.Combine(wwwRootPath,productVM.Product.ImageURL.TrimStart('\\'));
+                    //if (!string.IsNullOrEmpty(productVM.Product.ImageURL)) { 
+                    //    //delete the old image
+                    //    //trimmig \ from path
+                    //    var oldImagePath = Path.Combine(wwwRootPath,productVM.Product.ImageURL.TrimStart('\\'));
 
-                        if (System.IO.File.Exists(oldImagePath)) { 
-                            System.IO.File.Delete(oldImagePath);
-                        }
-                    }
+                    //    if (System.IO.File.Exists(oldImagePath)) { 
+                    //        System.IO.File.Delete(oldImagePath);
+                    //    }
+                    //}
 
-                    //saving image
-                    using (var fileStream = new FileStream(Path.Combine(prodcutPath, fileName), FileMode.Create))
-                    {
-                        file.CopyTo(fileStream);
-                    }
+                    ////saving image
+                    //using (var fileStream = new FileStream(Path.Combine(prodcutPath, fileName), FileMode.Create))
+                    //{
+                    //    file.CopyTo(fileStream);
+                    //}
 
-                    productVM.Product.ImageURL = @"\images\product\" + fileName;
+                    //productVM.Product.ImageURL = @"\images\product\" + fileName;
                 }
 
                 if (productVM.Product.Id == 0)
@@ -183,13 +183,13 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Error while deleting" });
             }
 
-            var oldImagePath =
-                Path.Combine(_webHostEnvironment.WebRootPath, prodToBeDeleted.ImageURL.TrimStart('\\'));
+            //var oldImagePath =
+            //    Path.Combine(_webHostEnvironment.WebRootPath, prodToBeDeleted.ImageURL.TrimStart('\\'));
 
-            if (System.IO.File.Exists(oldImagePath))
-            {
-                System.IO.File.Delete(oldImagePath);
-            }
+            //if (System.IO.File.Exists(oldImagePath))
+            //{
+            //    System.IO.File.Delete(oldImagePath);
+            //}
 
             _unitOfWork.Product.Remove(prodToBeDeleted);
             _unitOfWork.Save();

@@ -34,10 +34,10 @@ namespace Bulky.DataAccess.Repository
                 objFromDb.Author = obj.Author;
 
                 // Only update the ImageURL if a new image is provided
-                if (obj.ImageURL != null)
-                {
-                    objFromDb.ImageURL = obj.ImageURL;
-                }
+                //if (obj.ImageURL != null)
+                //{
+                //    objFromDb.ImageURL = obj.ImageURL;
+                //}
             }
         }
 

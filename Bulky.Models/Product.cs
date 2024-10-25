@@ -55,10 +55,11 @@ namespace Bulky.Models
         public Category Category { get; set; }
 
 
-
-
         //// IMAGES
         //[ValidateNever]
         //public string ImageURL { get; set; }
+
+        [ValidateNever]
+        public List<ProductImage> ProductImages { get; set; }
     }
 }

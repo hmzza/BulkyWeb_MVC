@@ -59,44 +59,18 @@ namespace BulkyWeb.Areas.Admin.Controllers
             else
             {
                 //that means it is update functionality
-                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
+                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties:"ProductImages");
                 return View(productVM);
             }
 
 
         }
         [HttpPost]
-        public IActionResult Upsert(ProductVM productVM, IFormFile? file)
+        public IActionResult Upsert(ProductVM productVM, List<IFormFile> files)
         {
             //if obj is valid it will go to Product.cs, it will check whatever is required and it should be populated accordingly
             if (ModelState.IsValid)
             {
-                string wwwRootPath = _webHostEnvironment.WebRootPath; //this will give us path of root folder which is wwwroot
-                if (file != null)
-                {
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); //that will give a random name to file
-                    string prodcutPath = Path.Combine(wwwRootPath, @"images\product"); //that will give path inside product folder of images
-
-                    // for updating image 
-                    //if (!string.IsNullOrEmpty(productVM.Product.ImageURL)) { 
-                    //    //delete the old image
-                    //    //trimmig \ from path
-                    //    var oldImagePath = Path.Combine(wwwRootPath,productVM.Product.ImageURL.TrimStart('\\'));
-
-                    //    if (System.IO.File.Exists(oldImagePath)) { 
-                    //        System.IO.File.Delete(oldImagePath);
-                    //    }
-                    //}
-
-                    ////saving image
-                    //using (var fileStream = new FileStream(Path.Combine(prodcutPath, fileName), FileMode.Create))
-                    //{
-                    //    file.CopyTo(fileStream);
-                    //}
-
-                    //productVM.Product.ImageURL = @"\images\product\" + fileName;
-                }
-
                 if (productVM.Product.Id == 0)
                 {
                     _unitOfWork.Product.Add(productVM.Product); //write Product object to the Product table
@@ -105,10 +79,48 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 {
                     _unitOfWork.Product.Update(productVM.Product);
                 }
-                
                 _unitOfWork.Save();
+
+                string wwwRootPath = _webHostEnvironment.WebRootPath; //this will give us path of root folder which is wwwroot
+                if (files != null)
+                {
+                    foreach (IFormFile file in files)
+                    {
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); //that will give a random name to file
+                        string productPath = @"images\products\product-" + productVM.Product.Id;
+                        string finalPath = Path.Combine(wwwRootPath, productPath); //that will give path inside product folder of images
+
+                        if (!Directory.Exists(finalPath)) { 
+                            Directory.CreateDirectory(finalPath);
+                        }
+
+                        ////saving image
+                        using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+
+                        ProductImage productImage = new()
+                        {
+                            ImageUrl = @"\" + productPath + @"\" + fileName,
+                            ProductId = productVM.Product.Id,
+                        };
+
+                        if(productVM.Product.ProductImages == null)
+                        {
+                            productVM.Product.ProductImages = new List<ProductImage>();
+                        }
+
+                        productVM.Product.ProductImages.Add(productImage); 
+                    }
+
+                    _unitOfWork.Product.Update(productVM.Product);
+                    _unitOfWork.Save();
+                }
+
+
                 //to show successful dialogue on screen
-                TempData["success"] = "Product created successfully!";
+                TempData["success"] = "Product created/updated successfully!";
                 return RedirectToAction("Index");
             }
             else
@@ -124,46 +136,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
             
         }
 
-
-
-        //get action
-        //public IActionResult Delete(int? id)
-        //{
-        //    if (id == null || id == 0)
-        //    {
-        //        return NotFound();
-        //    }
-
-
-        //    Product? ProductFromDb = _unitOfWork.Product.Get(u => u.Id == id);
-        //    //Product? ProductFromDb = _db.Categories.Find(id);
-        //    //Product? ProductFromDb = _db.Categories.FirstOrDefault(c => c.Id == id);
-
-        //    if (ProductFromDb == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(ProductFromDb);
-        //}
-        //[HttpPost, ActionName("Delete")]
-        //public IActionResult DeletePOST(int? id)
-        //{
-
-        //    Product? obj = _unitOfWork.Product.Get(u => u.Id == id);
-        //    //Product? obj = _db.Categories.Find(id);
-        //    if (obj == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    _unitOfWork.Product.Remove(obj);
-        //    _unitOfWork.Save();
-        //    //_db.Categories.Remove(obj);
-
-        //    //_db.Categories.Update(obj); //write Product object to the Product table
-        //    //_db.SaveChanges();
-        //    TempData["success"] = "Product deleted successfully!";
-        //    return RedirectToAction("Index");
-        //}
 
         #region API CALLS
 

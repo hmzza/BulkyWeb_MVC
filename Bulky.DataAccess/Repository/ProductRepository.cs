@@ -32,6 +32,7 @@ namespace Bulky.DataAccess.Repository
                 objFromDb.Description = obj.Description;
                 objFromDb.CategoryID = obj.CategoryID;
                 objFromDb.Author = obj.Author;
+                objFromDb.ProductImages = obj.ProductImages;
 
                 // Only update the ImageURL if a new image is provided
                 //if (obj.ImageURL != null)

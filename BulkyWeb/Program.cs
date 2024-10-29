@@ -32,13 +32,11 @@ builder.Services.ConfigureApplicationCookie(options => {
 builder.Services.AddAuthentication().AddFacebook(option =>
 {
     option.AppId = "870863455177472";
-    option.AppSecret = "88ec1417def639a151d7bf4142f0508e";
 });
 
 builder.Services.AddAuthentication().AddMicrosoftAccount(option =>
 {
     option.ClientId = "52c78c30-bba7-445c-a3ad-36105b828940";
-    option.ClientSecret = "cd16e395-ae08-489c-b95b-78dd55ca6471";
 });
 //registering category service to dependecy injection
 //builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
